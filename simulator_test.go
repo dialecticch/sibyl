@@ -19,7 +19,7 @@ import (
 func TestSimulator(t *testing.T) {
 	privateKey, err := crypto.GenerateKey()
 	if err != nil {
-		t.Fatal(err)
+		t.Fatalf("crypto.GenerateKey err: %s", err)
 	}
 
 	pub := crypto.PubkeyToAddress(*privateKey.Public().(*ecdsa.PublicKey))
@@ -28,12 +28,12 @@ func TestSimulator(t *testing.T) {
 
 	transactOpts, err := bind.NewKeyedTransactorWithChainID(privateKey, big.NewInt(1337))
 	if err != nil {
-		t.Fatal(err)
+		t.Fatalf("bind.NewKeyedTransactorWithChainID err: %s", err)
 	}
 
 	addr, _, c, err := testdata.DeployCounter(transactOpts, backend)
 	if err != nil {
-		t.Fatal(err)
+		t.Fatalf("testdata.DeployCounter err: %s", err)
 	}
 
 	backend.Commit()
@@ -52,29 +52,32 @@ func TestSimulator(t *testing.T) {
 		opts.NoSend = true
 
 		tx, err := c.Tick(opts)
+		if err != nil {
+			t.Fatalf("c.Tick err: %s", err)
+		}
 
 		_, err = s.Call(pub, addr, tx.Data(), tx.Gas(), common.Big0)
 		if err != nil {
-			t.Fatal(err)
+			t.Fatalf("s.Call err: %s", err)
 		}
 
 		cabi, err := abi.JSON(strings.NewReader(testdata.CounterMetaData.ABI))
 		if err != nil {
-			t.Fatal(err)
+			t.Fatalf("abi.JSON err: %s", err)
 		}
 
 		ret, err := s.StaticCall(pub, addr, cabi.Methods["count"].ID, 30_000_000)
 		if err != nil {
-			t.Fatal(err)
+			t.Fatalf("s.StaticCall err: %s", err)
 		}
 
 		pack, err := cabi.Unpack("count", ret)
 		if err != nil {
-			t.Fatal(err)
+			t.Fatalf("cabi.Unpack err: %s", err)
 		}
 
 		parsed := *abi.ConvertType(pack[0], new(*big.Int)).(**big.Int)
-		if parsed.Uint64() != uint64(i + 1) {
+		if parsed.Uint64() != uint64(i+1) {
 			t.Fatal("count did not work")
 		}
 	}
