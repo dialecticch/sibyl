@@ -16,6 +16,7 @@ type Simulator struct {
 
 	blockchain *core.BlockChain
 
+	// @TODO CHECK IF WE CAN ACTUALLY REUSE THE VM ITSELF.
 	vm *vm.EVM
 }
 
@@ -51,7 +52,6 @@ func (s *Simulator) StaticCall(sender, to common.Address, input []byte, gas uint
 	s.mux.Lock()
 	defer s.mux.Unlock()
 
-	// @TODO check if we need price here?
 	s.vm.Reset(vm.TxContext{Origin: sender, GasPrice: big.NewInt(0)}, s.vm.StateDB)
 
 	ret, _, err := s.vm.StaticCall(vm.AccountRef(sender), to, input, gas)
