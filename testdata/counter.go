@@ -30,11 +30,12 @@ var (
 
 // CounterMetaData contains all meta data concerning the Counter contract.
 var CounterMetaData = &bind.MetaData{
-	ABI: "[{\"inputs\":[],\"name\":\"tick\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
+	ABI: "[{\"inputs\":[],\"name\":\"count\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"tick\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}]",
 	Sigs: map[string]string{
+		"06661abd": "count()",
 		"3eaf5d9f": "tick()",
 	},
-	Bin: "0x6080604052348015600f57600080fd5b5060a78061001e6000396000f3fe6080604052348015600f57600080fd5b506004361060285760003560e01c80633eaf5d9f14602d575b600080fd5b60336035565b005b600160008082825460459190604c565b9091555050565b60008219821115606c57634e487b7160e01b600052601160045260246000fd5b50019056fea26469706673582212207c78cf68708f6f5d88f206430b0df084e9f7fc41d9a66b7680763c23c99e45e464736f6c63430008060033",
+	Bin: "0x608060405234801561001057600080fd5b5060cb8061001f6000396000f3fe6080604052348015600f57600080fd5b506004361060325760003560e01c806306661abd1460375780633eaf5d9f146051575b600080fd5b603f60005481565b60405190815260200160405180910390f35b60576059565b005b6001600080828254606991906070565b9091555050565b60008219821115609057634e487b7160e01b600052601160045260246000fd5b50019056fea264697066735822122029d21abceb91b3acbda1b66751400ff3bfa65a50705ad8b558e8054e9d5db97d64736f6c63430008060033",
 }
 
 // CounterABI is the input ABI used to generate the binding from.
@@ -206,6 +207,37 @@ func (_Counter *CounterTransactorRaw) Transfer(opts *bind.TransactOpts) (*types.
 // Transact invokes the (paid) contract method with params as input values.
 func (_Counter *CounterTransactorRaw) Transact(opts *bind.TransactOpts, method string, params ...interface{}) (*types.Transaction, error) {
 	return _Counter.Contract.contract.Transact(opts, method, params...)
+}
+
+// Count is a free data retrieval call binding the contract method 0x06661abd.
+//
+// Solidity: function count() view returns(uint256)
+func (_Counter *CounterCaller) Count(opts *bind.CallOpts) (*big.Int, error) {
+	var out []interface{}
+	err := _Counter.contract.Call(opts, &out, "count")
+
+	if err != nil {
+		return *new(*big.Int), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(*big.Int)).(**big.Int)
+
+	return out0, err
+
+}
+
+// Count is a free data retrieval call binding the contract method 0x06661abd.
+//
+// Solidity: function count() view returns(uint256)
+func (_Counter *CounterSession) Count() (*big.Int, error) {
+	return _Counter.Contract.Count(&_Counter.CallOpts)
+}
+
+// Count is a free data retrieval call binding the contract method 0x06661abd.
+//
+// Solidity: function count() view returns(uint256)
+func (_Counter *CounterCallerSession) Count() (*big.Int, error) {
+	return _Counter.Contract.Count(&_Counter.CallOpts)
 }
 
 // Tick is a paid mutator transaction binding the contract method 0x3eaf5d9f.
