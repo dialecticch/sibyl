@@ -40,7 +40,7 @@ func TestSimulator(t *testing.T) {
 
 	s := sibyl.NewSimulator(backend.Blockchain())
 
-	backend.Close()
+	_ = backend.Close()
 
 	err = s.Fork(backend.Blockchain().CurrentBlock().NumberU64())
 	if err != nil {
