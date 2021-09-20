@@ -19,12 +19,14 @@ type Simulator struct {
 	vm *vm.EVM
 }
 
+// NewSimulator returns a bare simulator
 func NewSimulator(blockchain *core.BlockChain) *Simulator {
 	return &Simulator{
 		blockchain: blockchain,
 	}
 }
 
+// Fork creates a new temporary context with the state for a given block number
 func (s *Simulator) Fork(blockNumber uint64) error {
 	s.mux.Lock()
 	defer s.mux.Unlock()
@@ -44,11 +46,12 @@ func (s *Simulator) Fork(blockNumber uint64) error {
 	return nil
 }
 
+// StaticCall executes an EVM static call on the current context
 func (s *Simulator) StaticCall(sender, to common.Address, input []byte, gas uint64) ([]byte, error) {
 	s.mux.Lock()
 	defer s.mux.Unlock()
 
-	// @TODO
+	// @TODO check if we need price here?
 	s.vm.Reset(vm.TxContext{Origin: sender, GasPrice: big.NewInt(0)}, s.vm.StateDB)
 
 	ret, _, err := s.vm.StaticCall(vm.AccountRef(sender), to, input, gas)
@@ -59,6 +62,7 @@ func (s *Simulator) StaticCall(sender, to common.Address, input []byte, gas uint
 	return ret, nil
 }
 
+// Call executes an EVM call on the current context
 func (s *Simulator) Call(sender, to common.Address, input []byte, gas uint64, value *big.Int) ([]byte, error) {
 	s.mux.Lock()
 	defer s.mux.Unlock()
