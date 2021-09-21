@@ -52,8 +52,6 @@ func (s *Simulator) StaticCall(sender, to common.Address, input []byte, gas uint
 	s.mux.Lock()
 	defer s.mux.Unlock()
 
-	s.vm.Reset(vm.TxContext{Origin: sender, GasPrice: big.NewInt(0)}, s.vm.StateDB)
-
 	ret, _, err := s.vm.StaticCall(vm.AccountRef(sender), to, input, gas)
 	if err != nil {
 		return nil, err
@@ -66,8 +64,6 @@ func (s *Simulator) StaticCall(sender, to common.Address, input []byte, gas uint
 func (s *Simulator) Call(sender, to common.Address, input []byte, gas uint64, value *big.Int) ([]byte, error) {
 	s.mux.Lock()
 	defer s.mux.Unlock()
-
-	s.vm.Reset(vm.TxContext{Origin: sender, GasPrice: big.NewInt(0)}, s.vm.StateDB)
 
 	ret, _, err := s.vm.Call(vm.AccountRef(sender), to, input, gas, value)
 	if err != nil {
