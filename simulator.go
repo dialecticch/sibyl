@@ -16,7 +16,6 @@ type Simulator struct {
 
 	blockchain *core.BlockChain
 
-	// @TODO CHECK IF WE CAN ACTUALLY REUSE THE VM ITSELF.
 	vm *vm.EVM
 }
 
