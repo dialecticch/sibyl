@@ -23,7 +23,7 @@ if err != nil {
 // Simulate a static call.
 ret, err := simulator.StaticCall(sender, to, input, gas)
 if err != nil {
-	log.Panic(err)
+    log.Panic(err)
 }
 
 fmt.Println(hexutil.Encode(result))
