@@ -11,7 +11,7 @@ import (
 	"github.com/pkg/errors"
 )
 
-// Simulator is a transaction simulator, allowing you to run transactions against the current blockchain state.
+// Simulator is a transaction simulator, allowing you to run transactions against the current blockchain state
 type Simulator struct {
 	mux sync.Mutex
 
@@ -81,7 +81,7 @@ func (s *Simulator) Snapshot() int {
 	return s.db.Snapshot()
 }
 
-// Rollback rolls the state back to a specific snapshot.
+// Rollback rolls the state back to a specific snapshot
 func (s *Simulator) Rollback(snapshot int) {
 	s.db.RevertToSnapshot(snapshot)
 }
