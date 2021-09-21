@@ -6,6 +6,7 @@ import (
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core"
+	"github.com/ethereum/go-ethereum/core/state"
 	"github.com/ethereum/go-ethereum/core/vm"
 	"github.com/pkg/errors"
 )
@@ -14,6 +15,7 @@ import (
 type Simulator struct {
 	mux sync.Mutex
 
+	db         *state.StateDB
 	blockchain *core.BlockChain
 
 	vm *vm.EVM
@@ -37,6 +39,8 @@ func (s *Simulator) Fork(blockNumber uint64) error {
 	if err != nil {
 		return errors.Wrap(err, "failed to read blockchain state for block")
 	}
+
+	s.db = db
 
 	blockCtx := core.NewEVMBlockContext(header, s.blockchain, nil)
 	txCtx := vm.TxContext{}
@@ -70,4 +74,14 @@ func (s *Simulator) Call(sender, to common.Address, input []byte, gas uint64, va
 	}
 
 	return ret, nil
+}
+
+// Snapshot takes a snapshot of the current state
+func (s *Simulator) Snapshot() int {
+	return s.db.Snapshot()
+}
+
+// Rollback rolls the state back to a specific snapshot.
+func (s *Simulator) Rollback(snapshot int) {
+	s.db.RevertToSnapshot(snapshot)
 }
