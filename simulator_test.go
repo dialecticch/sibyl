@@ -78,7 +78,7 @@ func TestSimulator(t *testing.T) {
 
 		parsed := *abi.ConvertType(pack[0], new(*big.Int)).(**big.Int)
 		if parsed.Uint64() != uint64(i+1) {
-			t.Fatal("count did not work")
+			t.Fatalf("expected %d actual %d", i+1, parsed.Uint64())
 		}
 	}
 }
